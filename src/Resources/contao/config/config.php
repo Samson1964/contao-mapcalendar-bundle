@@ -13,7 +13,6 @@ declare(strict_types=1);
  */
 
 use Schachbulle\ContaoMapcalendarBundle\FrontendModule\MapCalendarModule;
-use Schachbulle\ContaoMapcalendarBundle\Model\EventTypeModel;
 
 /*
  * Frontend-Modul
@@ -21,13 +20,8 @@ use Schachbulle\ContaoMapcalendarBundle\Model\EventTypeModel;
  * Der Schlüssel „mapcalendar“ steht in tl_module.type der bestehenden
  * Module und darf nicht verändert werden. Der Gruppenschlüssel „dsb“ wird
  * nicht gespeichert und dient nur der Gliederung der Typauswahl.
+ *
+ * Tabelle und Modell der Veranstaltungsarten kommen aus
+ * schachbulle/contao-eventtypes-bundle.
  */
 $GLOBALS['FE_MOD']['dsb']['mapcalendar'] = MapCalendarModule::class;
-
-/*
- * Modell der Veranstaltungsarten
- *
- * Auch das Mitglieder-Kalender-Bundle registriert ein Modell für diese
- * Tabelle. Wer zuerst kommt, gewinnt; beide Klassen sind gleichwertig.
- */
-$GLOBALS['TL_MODELS']['tl_event_type'] = $GLOBALS['TL_MODELS']['tl_event_type'] ?? EventTypeModel::class;

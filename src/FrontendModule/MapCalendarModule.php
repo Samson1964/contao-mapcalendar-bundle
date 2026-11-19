@@ -17,8 +17,8 @@ namespace Schachbulle\ContaoMapcalendarBundle\FrontendModule;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\FrontendTemplate;
 use Contao\StringUtil;
+use Schachbulle\ContaoEventtypesBundle\Model\EventTypeModel;
 use Schachbulle\ContaoMapcalendarBundle\Model\UpcomingEventsModel;
-use Schachbulle\ContaoMapcalendarBundle\Model\EventTypeModel;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

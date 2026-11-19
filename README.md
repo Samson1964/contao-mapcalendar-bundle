@@ -13,9 +13,8 @@ gepflegt und hier als eigenständiges Contao-Bundle verpackt.
 * PHP 7.4 oder 8.x
 * Contao 4.13 mit Kalender-Bundle
 * [MultiColumnWizard](https://packagist.org/packages/menatwork/contao-multicolumnwizard-bundle) ^3.4
-* Die Tabelle `tl_event_type` (Veranstaltungsarten) und die Zuordnungstabelle
-  `tl_calendar_events_event_type` – **beide bringt dieses Bundle nicht mit**,
-  sie müssen in der Installation bereits vorhanden sein (siehe unten).
+* [Veranstaltungsarten-Bundle](https://github.com/Samson1964/contao-eventtypes-bundle) ^1.0
+  (wird von Composer mitinstalliert, bringt Haste 4 mit)
 
 ## Modultyp
 
@@ -35,38 +34,28 @@ Es werden höchstens 15 kommende Termine angezeigt.
 
 Der Filter liest die veröffentlichten Einträge aus `tl_event_type` und sucht die
 passenden Termine über `tl_calendar_events_event_type` (Spalten
-`calendar_events_id`, `event_type_id`). Die Tabellen, ihre DCA und das Feld
-`eventType` in `tl_calendar_events` gehören **nicht** zu diesem Bundle. Redmind hat
-sie auf schachbund.de projektweit in `app/Resources/contao/` angelegt, nicht in
-`src/redmind/`:
-
-| Datei | Inhalt |
-| --- | --- |
-| `app/Resources/contao/dca/tl_event_type.php` | Tabelle der Veranstaltungsarten |
-| `app/Resources/contao/dca/tl_calendar_events.php` | Feld `eventType` (Haste-ManyToMany), Legende `dsb_legend` |
-| `app/Resources/contao/config/config.php` | Backend-Modul `event_types` unter „Inhalte“ |
-| `app/Resources/contao/languages/de/tl_event_type.php`, `modules.php` | Beschriftungen |
-
-Diese Dateien bleiben bei der Umstellung unverändert liegen.
-
-Das Bundle registriert lediglich ein Modell `EventTypeModel` für `tl_event_type`,
-falls noch keines registriert ist.
+`calendar_events_id`, `event_type_id`). Tabelle, Feld, Backend-Modul und Modell
+stellt das [Veranstaltungsarten-Bundle](https://github.com/Samson1964/contao-eventtypes-bundle)
+bereit; die Termine werden im Backend dort mit Arten versehen.
 
 ## Installation
 
-Solange das Paket nicht auf Packagist steht, das GitHub-Repository als Quelle in
-die `composer.json` des Projekts eintragen:
+Solange die Pakete nicht auf Packagist stehen, beide GitHub-Repositories als
+Quelle in die `composer.json` des Projekts eintragen. Composer liest
+`repositories` nur aus der Projektdatei, deshalb muss auch die Abhängigkeit dort
+stehen:
 
 ```json
 "repositories": [
-    { "type": "vcs", "url": "https://github.com/Samson1964/contao-mapcalendar-bundle" }
+    { "type": "vcs", "url": "https://github.com/Samson1964/contao-mapcalendar-bundle" },
+    { "type": "vcs", "url": "https://github.com/Samson1964/contao-eventtypes-bundle" }
 ]
 ```
 
 Danach:
 
 ```bash
-composer require schachbulle/contao-mapcalendar-bundle:^1.0
+composer require schachbulle/contao-mapcalendar-bundle:^1.1
 vendor/bin/contao-console contao:install
 vendor/bin/contao-console cache:clear --env=prod
 ```
@@ -83,6 +72,8 @@ Installation daran scheitert: `composer config policy.advisories.block false`.
    `src/redmind/Helper/` enthält die Modelle, die die Karte bisher benutzt hat.
    Er darf erst weg, wenn auch das
    [Layout-Bundle](https://github.com/Samson1964/contao-dsblayout-bundle) installiert ist.
+   Für die Veranstaltungsarten in `app/Resources/contao/` gilt der Umstiegsabschnitt
+   im [Veranstaltungsarten-Bundle](https://github.com/Samson1964/contao-eventtypes-bundle).
 3. Die Assets liegen jetzt unter `bundles/contaomapcalendar/` statt
    `bundles/redmindmapcalendar/`. Eigene Template-Kopien im Theme anpassen:
 
