@@ -1,0 +1,52 @@
+<?php
+
+use Contao\Template;
+
+$GLOBALS['TL_BODY'][] = Template::generateScriptTag('bundles/contaomapcalendar/mapcalendar.js');
+?>
+<div class="mod_mapcalendar <?= $this->class ?>">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="widget-select">
+                <select id="lvselect">
+                    <?php foreach ($this->lvs as $key => $l): ?>
+                        <option value="<?= $key ?>" data-mapid="<?= $l['mapid'] ?? '' ?>"><?= $l['selectTitle'] ?? '' ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <input type="hidden" name="module_id" value="<?= $this->id ?>">
+            <div id="svgmap" class="d-none d-lg-block"></div>
+            <script>
+                $(function () {
+                    $('#svgmap').load("/bundles/contaomapcalendar/deutschland.svg");
+                });
+            </script>
+        </div>
+        <div class="col-lg-8 bscal">
+            <div class="calframe">
+                <div class="buttons">
+                    <div class="button first">
+                        <a class="loadcal" data-area="lvs">Landesverbände</a>
+                    </div>
+                    <div class="button">
+                        <a class="loadcal active" data-area="dsb">Deutscher Schachbund</a>
+                    </div>
+                    <div class="btnframe last">
+                        <div class="widget-select">
+                            <select name="filter">
+                                <option value="">Alle Termine</option>
+                                <?php foreach ($this->filters as $filter): ?>
+                                    <option value="<?= $filter->id ?>"><?= $filter->name ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <div id="mapcal_content">
+                    <?= $this->inner ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

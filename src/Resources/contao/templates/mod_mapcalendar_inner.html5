@@ -1,0 +1,92 @@
+<?php
+
+use Contao\Date;
+use Contao\Events;
+
+$count = 0;
+$lastMonth = false;
+?>
+
+<div class="head">
+	<h2>Schachturniere, Meisterschaften, etc.</h2>
+	<?php if ($this->activeStr): ?>
+		<div class="actcal"><?= $this->activeText ?>&nbsp; <span><?= $this->activeStr ?></span></div>
+	<?php endif; ?>
+	<div style="clear:both"></div>
+</div>
+
+<?php if ($this->events): ?>
+	<div class="inner">
+		<div class="scroll">
+<?php foreach ($this->events as $event):
+	++$count;
+	$link = Events::generateEventUrl($event);
+	$startDate = (int) $event->startDate;
+	$endDate = (int) $event->endDate;
+
+	if (date('d.m.Y', $startDate) === date('d.m.Y', $endDate) || 0 === $endDate) {
+		// Eintägiger Termin
+		$date = date('d.m.Y', $startDate);
+	} elseif (date('m', $startDate) === date('m', $endDate)) {
+		// Mehrtägiger Termin innerhalb eines Monats
+		$date = date('d.', $startDate).' - '.date('d.m.Y', $endDate);
+	} else {
+		// Mehrtägiger Termin über Monatsgrenzen hinweg
+		$date = date('d.m.', $startDate).' - '.date('d.m.Y', $endDate);
+	}
+
+	// Monatsname aus den Contao-Sprachdateien, ersetzt das entfallene strftime()
+	$month = Date::parse('F', $startDate);
+	?>
+	<?php if ($lastMonth !== $month):
+		$count = 1;
+		$lastMonth = $month; ?>
+		<div class="month"><?= $lastMonth ?></div>
+	<?php endif; ?>
+
+	<div class="eventrow <?= $event->cssClass ?><?= $count % 2 ? ' even' : ' odd' ?><?= 1 === $count ? ' first' : '' ?>">
+		<div class="date">
+			<?php if ($link): ?>
+				<a href="<?= $link ?>"<?= 'external' === $event->source ? ' target="_blank" rel="noopener"' : '' ?>><?= $date ?></a>
+			<?php else: ?>
+				<?= $date ?>
+			<?php endif; ?>
+		</div>
+		<div class="title">
+			<?php if ($link): ?>
+				<a href="<?= $link ?>"<?= 'external' === $event->source ? ' target="_blank" rel="noopener"' : '' ?>><?= $event->title ?></a>
+			<?php else: ?>
+				<?= $event->title ?>
+			<?php endif; ?>
+		</div>
+		<div class="place">
+			<?php if ($link): ?>
+				<a href="<?= $link ?>"<?= 'external' === $event->source ? ' target="_blank" rel="noopener"' : '' ?>><?= $event->location ?>&nbsp;</a>
+			<?php else: ?>
+				<?= $event->location ?>&nbsp;
+			<?php endif; ?>
+		</div>
+		<div class="more">
+			<?php if (false !== strpos((string) $event->cssClass, 'abgesagt')): ?>
+			abgesagt
+			<?php elseif (false !== strpos((string) $event->cssClass, 'verschoben')): ?>
+			verschoben
+			<?php elseif ($link): ?>
+			<a href="<?= $link ?>" class="ctamore" <?= 'external' === $event->source ? ' target="_blank" rel="noopener"' : '' ?>>mehr</a>
+			<?php endif; ?>
+		</div>
+	</div>
+<?php endforeach; ?>
+	</div>
+	</div>
+<?php else: ?>
+	<div class="inner noevents">
+		<p>Keine Termine gefunden.<br><span>Bitte verändern Sie ggfs. die Filtereinstellungen.</span></p>
+	</div>
+<?php endif; ?>
+
+
+<div class="calbottom">
+	<a href="<?= $this->replaceInsertTags('{{link_url::350}}') ?>" class="ctamore">Alle DSB-Termine anzeigen</a>
+	<a href="<?= $this->replaceInsertTags('{{link_url::1127}}') ?>" class="ctabtn small">Veranstaltung melden</a>
+</div>
