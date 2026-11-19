@@ -36,9 +36,18 @@ Es werden höchstens 15 kommende Termine angezeigt.
 Der Filter liest die veröffentlichten Einträge aus `tl_event_type` und sucht die
 passenden Termine über `tl_calendar_events_event_type` (Spalten
 `calendar_events_id`, `event_type_id`). Die Tabellen, ihre DCA und das Feld
-`eventType` in `tl_calendar_events` gehören **nicht** zu diesem Bundle und auch
-nicht zum früheren Redmind-Code in `src/redmind/`. Sie stammen aus einem anderen
-Teil der schachbund.de-Installation und müssen dort bleiben.
+`eventType` in `tl_calendar_events` gehören **nicht** zu diesem Bundle. Redmind hat
+sie auf schachbund.de projektweit in `app/Resources/contao/` angelegt, nicht in
+`src/redmind/`:
+
+| Datei | Inhalt |
+| --- | --- |
+| `app/Resources/contao/dca/tl_event_type.php` | Tabelle der Veranstaltungsarten |
+| `app/Resources/contao/dca/tl_calendar_events.php` | Feld `eventType` (Haste-ManyToMany), Legende `dsb_legend` |
+| `app/Resources/contao/config/config.php` | Backend-Modul `event_types` unter „Inhalte“ |
+| `app/Resources/contao/languages/de/tl_event_type.php`, `modules.php` | Beschriftungen |
+
+Diese Dateien bleiben bei der Umstellung unverändert liegen.
 
 Das Bundle registriert lediglich ein Modell `EventTypeModel` für `tl_event_type`,
 falls noch keines registriert ist.
